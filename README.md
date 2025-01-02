@@ -1,24 +1,8 @@
-# README
+reproduction code for https://github.com/DmitryTsepelev/graphql-ruby-fragment_cache/issues/126
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+step to run test:
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```
+bundle install
+bundle exec rspec
+```
