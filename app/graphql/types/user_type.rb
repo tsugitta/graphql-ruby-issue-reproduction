@@ -10,7 +10,7 @@ module Types
     end
     def posts(use_cache:)
       if use_cache
-        cache_fragment(expires_in: 1.minute) do
+        cache_fragment(expires_in: 1.minute, dataloader: true) do
           dataloader.with(Sources::PostsByUser).load(object.id)
         end
       else

@@ -27,13 +27,11 @@ RSpec.describe 'FragmentCache + Dataloader N+1 Investigation', type: :request do
 
   context 'when cache_fragment is disabled' do
     it 'should have minimal query count with effective batching' do
-      queries_count = 0
       queries = []
 
       counter = ->(_name, _started, _finished, _unique_id, payload) do
         sql = payload[:sql].to_s
         if sql.start_with?("SELECT")
-          queries_count += 1
           queries << sql
         end
       end
@@ -54,21 +52,19 @@ RSpec.describe 'FragmentCache + Dataloader N+1 Investigation', type: :request do
       json_response = JSON.parse(response.body)
       expect(json_response["errors"]).to be_nil
       expect(json_response["data"]["users"]).to be_present
-      expect(queries_count).to be 2
+      expect(queries.size).to be 2
     end
   end
 
   context 'when cache_fragment is enabled' do
-    it 'should show increased query count due to N+1' do
+    it 'should have minimal query count with effective batching' do
       GraphQL::FragmentCache.cache_store = ActiveSupport::Cache.lookup_store(:memory_store)
 
-      queries_count = 0
       queries = []
 
       counter = ->(_name, _started, _finished, _unique_id, payload) do
         sql = payload[:sql].to_s
         if sql.start_with?("SELECT")
-          queries_count += 1
           queries << sql
         end
       end
@@ -91,7 +87,7 @@ RSpec.describe 'FragmentCache + Dataloader N+1 Investigation', type: :request do
       json_response = JSON.parse(response.body)
       expect(json_response["errors"]).to be_nil
       expect(json_response["data"]["users"]).to be_present
-      expect(queries_count).to be 3
+      expect(queries.size).to be 2
     end
   end
 end
